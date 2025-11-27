@@ -1,4 +1,4 @@
-# Modern Password Generator
+# Password Generator
 
 A beautiful, simple, and secure password generator web application.
 
