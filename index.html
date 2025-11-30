@@ -1,66 +1,750 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Password Generator</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+    <title>SecurePass Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 40px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            color: #fff;
+        }
+
+        .header p {
+            color: #d8b4fe;
+            font-size: 18px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 41, 59, 0.5);
+            padding: 10px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #d8b4fe;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: #9333ea;
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(147, 51, 234, 0.5);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(51, 65, 85, 0.5);
+        }
+
+        .main-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(147, 51, 234, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .output-box {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .output-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .output-input {
+            flex: 1;
+            background: #1e293b;
+            color: #fff;
+            font-size: 20px;
+            font-family: 'Courier New', monospace;
+            padding: 18px 24px;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .icon-btn {
+            padding: 16px;
+            background: #9333ea;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .icon-btn:hover {
+            background: #7e22ce;
+            transform: translateY(-2px);
+        }
+
+        .icon-btn.secondary {
+            background: #334155;
+        }
+
+        .icon-btn.secondary:hover {
+            background: #475569;
+        }
+
+        .strength-meter {
+            margin-top: 20px;
+        }
+
+        .strength-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .strength-label {
+            color: #d8b4fe;
+        }
+
+        .strength-value {
+            font-weight: 600;
+        }
+
+        .strength-bar {
+            height: 8px;
+            background: #334155;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: all 0.5s;
+            border-radius: 10px;
+        }
+
+        .settings {
+            margin-top: 30px;
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .setting-label {
+            color: #d8b4fe;
+            font-weight: 600;
+        }
+
+        .setting-value {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            background: #334155;
+            border-radius: 10px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #9333ea;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #9333ea;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            color: #cbd5e1;
+            transition: color 0.3s;
+        }
+
+        .checkbox-label:hover {
+            color: #fff;
+        }
+
+        .checkbox-label input {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #9333ea;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .button-grid.four-cols {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .style-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #334155;
+            color: #d8b4fe;
+        }
+
+        .style-btn.active {
+            background: #9333ea;
+            color: #fff;
+        }
+
+        .style-btn:hover:not(.active) {
+            background: #475569;
+        }
+
+        .select-box {
+            width: 100%;
+            padding: 14px 20px;
+            background: #334155;
+            color: #fff;
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 12px;
+            font-size: 15px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: #fff;
+            padding: 18px 28px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: bounce 0.5s;
+        }
+
+        .notification.show {
+            display: flex;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
 <body>
     <div class="container">
-        <h1>Password Generator</h1>
+        <div class="header">
+            <div class="header-content">
+                <svg class="header-icon" fill="none" stroke="#c084fc" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <h1>SecurePass</h1>
+            </div>
+            <p>Advanced Security Tools Suite</p>
+        </div>
 
-        <div class="result-container">
-            <span id="result"></span>
-            <button class="btn" id="clipboard">
-                <i class="far fa-copy"></i>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('password')">
+                <span>🔑</span> Password
+            </button>
+            <button class="tab-btn" onclick="switchTab('username')">
+                <span>👤</span> Username
+            </button>
+            <button class="tab-btn" onclick="switchTab('email')">
+                <span>📧</span> Email
+            </button>
+            <button class="tab-btn" onclick="switchTab('passphrase')">
+                <span>#️⃣</span> Passphrase
             </button>
         </div>
 
-        <div class="settings">
-            <div class="setting">
-                <label>Password Length</label>
-                <div class="length-control">
-                    <input type="number" id="length" min="4" max="64" value="12">
-                    <input type="range" id="length-slider" min="4" max="64" value="12">
+        <div class="main-card">
+            <!-- Password Tab -->
+            <div id="password" class="tab-content active">
+                <div class="output-box">
+                    <div class="output-row">
+                        <input type="password" id="passwordOutput" class="output-input" readonly>
+                        <button class="icon-btn secondary" onclick="togglePassword()">👁️</button>
+                        <button class="icon-btn" onclick="copyToClipboard('passwordOutput')">📋</button>
+                        <button class="icon-btn" onclick="generatePassword()">🔄</button>
+                    </div>
+                    <div class="strength-meter">
+                        <div class="strength-header">
+                            <span class="strength-label">Strength:</span>
+                            <span class="strength-value" id="strengthText">Strong</span>
+                        </div>
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthBar" style="width: 100%; background: #10b981;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings">
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <span class="setting-label">Password Length</span>
+                            <span class="setting-value" id="passwordLengthValue">16</span>
+                        </div>
+                        <input type="range" class="slider" id="passwordLength" min="8" max="32" value="16" oninput="updatePasswordLength()">
+                    </div>
+
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="uppercase" checked onchange="generatePassword()">
+                            Uppercase Letters (A-Z)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="lowercase" checked onchange="generatePassword()">
+                            Lowercase Letters (a-z)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="numbers" checked onchange="generatePassword()">
+                            Numbers (0-9)
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="symbols" checked onchange="generatePassword()">
+                            Symbols (!@#$%)
+                        </label>
+                    </div>
                 </div>
             </div>
 
-            <div class="setting">
-                <label>Include Uppercase Letters</label>
-                <input type="checkbox" id="uppercase" checked>
+            <!-- Username Tab -->
+            <div id="username" class="tab-content">
+                <div class="output-box">
+                    <div class="output-row">
+                        <input type="text" id="usernameOutput" class="output-input" readonly>
+                        <button class="icon-btn" onclick="copyToClipboard('usernameOutput')">📋</button>
+                        <button class="icon-btn" onclick="generateUsername()">🔄</button>
+                    </div>
+                </div>
+
+                <div class="settings">
+                    <div class="setting-group">
+                        <div class="setting-label" style="margin-bottom: 15px;">Username Style</div>
+                        <div class="button-grid">
+                            <button class="style-btn active" onclick="setUsernameStyle('mixed')">Mixed Words</button>
+                            <button class="style-btn" onclick="setUsernameStyle('random')">Random</button>
+                            <button class="style-btn" onclick="setUsernameStyle('professional')">Professional</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group" id="usernameLengthGroup" style="display: none;">
+                        <div class="setting-header">
+                            <span class="setting-label">Username Length</span>
+                            <span class="setting-value" id="usernameLengthValue">12</span>
+                        </div>
+                        <input type="range" class="slider" id="usernameLength" min="6" max="20" value="12" oninput="updateUsernameLength()">
+                    </div>
+                </div>
             </div>
 
-            <div class="setting">
-                <label>Include Lowercase Letters</label>
-                <input type="checkbox" id="lowercase" checked>
+            <!-- Email Tab -->
+            <div id="email" class="tab-content">
+                <div class="output-box">
+                    <div class="output-row">
+                        <input type="text" id="emailOutput" class="output-input" readonly>
+                        <button class="icon-btn" onclick="copyToClipboard('emailOutput')">📋</button>
+                        <button class="icon-btn" onclick="generateEmail()">🔄</button>
+                    </div>
+                </div>
+
+                <div class="settings">
+                    <div class="setting-group">
+                        <div class="setting-label" style="margin-bottom: 15px;">Email Prefix Style</div>
+                        <div class="button-grid">
+                            <button class="style-btn active" onclick="setEmailStyle('random')">Random</button>
+                            <button class="style-btn" onclick="setEmailStyle('alias')">Alias</button>
+                            <button class="style-btn" onclick="setEmailStyle('secure')">Secure</button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <div class="setting-label" style="margin-bottom: 15px;">Email Domain</div>
+                        <select class="select-box" id="emailDomain">
+                            <option>protonmail.com</option>
+                            <option>gmail.com</option>
+                            <option>outlook.com</option>
+                            <option>tutanota.com</option>
+                            <option>mail.com</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="setting">
-                <label>Include Numbers</label>
-                <input type="checkbox" id="numbers" checked>
-            </div>
+            <!-- Passphrase Tab -->
+            <div id="passphrase" class="tab-content">
+                <div class="output-box">
+                    <div class="output-row">
+                        <input type="text" id="passphraseOutput" class="output-input" readonly>
+                        <button class="icon-btn" onclick="copyToClipboard('passphraseOutput')">📋</button>
+                        <button class="icon-btn" onclick="generatePassphrase()">🔄</button>
+                    </div>
+                </div>
 
-            <div class="setting">
-                <label>Include Symbols</label>
-                <input type="checkbox" id="symbols" checked>
+                <div class="settings">
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <span class="setting-label">Number of Words</span>
+                            <span class="setting-value" id="wordCountValue">4</span>
+                        </div>
+                        <input type="range" class="slider" id="wordCount" min="3" max="8" value="4" oninput="updateWordCount()">
+                    </div>
+
+                    <div class="setting-group">
+                        <div class="setting-label" style="margin-bottom: 15px;">Separator</div>
+                        <div class="button-grid four-cols">
+                            <button class="style-btn active" onclick="setSeparator('-')">-</button>
+                            <button class="style-btn" onclick="setSeparator('_')">_</button>
+                            <button class="style-btn" onclick="setSeparator('.')">.</button>
+                            <button class="style-btn" onclick="setSeparator(' ')">Space</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <button class="btn btn-large" id="generate">
-            Generate Password
-        </button>
     </div>
 
-    <div id="toast">Password Copied!</div>
+    <div class="notification" id="notification">
+        📋 Copied to clipboard!
+    </div>
 
-    <script src="script.js"></script>
+    <script>
+        // State
+        let currentTab = 'password';
+        let passwordVisible = false;
+        let usernameStyle = 'mixed';
+        let emailStyle = 'random';
+        let separator = '-';
+
+        const wordList = [
+            'quantum', 'cipher', 'nebula', 'phoenix', 'cascade', 'horizon', 'stellar',
+            'enigma', 'prism', 'vertex', 'zenith', 'cosmos', 'matrix', 'fusion',
+            'crystal', 'thunder', 'shadow', 'legacy', 'vortex', 'titan', 'omega',
+            'aurora', 'nexus', 'eclipse', 'spectra', 'infinity', 'delta', 'sigma'
+        ];
+
+        const adjectives = ['swift', 'bright', 'dark', 'silent', 'brave', 'clever', 'mystic', 'lunar', 'solar', 'cosmic'];
+        const nouns = ['wolf', 'eagle', 'tiger', 'dragon', 'phoenix', 'falcon', 'raven', 'viper', 'panther', 'lynx'];
+        const firstNames = ['alex', 'jordan', 'taylor', 'morgan', 'casey', 'riley', 'avery', 'quinn'];
+        const lastNames = ['smith', 'johnson', 'williams', 'brown', 'jones', 'garcia', 'miller', 'davis'];
+
+        // Initialize
+        window.onload = function() {
+            generatePassword();
+            generateUsername();
+            generateEmail();
+            generatePassphrase();
+        };
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.closest('.tab-btn').classList.add('active');
+        }
+
+        function generatePassword() {
+            const length = document.getElementById('passwordLength').value;
+            const upper = document.getElementById('uppercase').checked;
+            const lower = document.getElementById('lowercase').checked;
+            const nums = document.getElementById('numbers').checked;
+            const syms = document.getElementById('symbols').checked;
+
+            let chars = '';
+            if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (nums) chars += '0123456789';
+            if (syms) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            if (chars.length === 0) chars = 'abcdefghijklmnopqrstuvwxyz';
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            document.getElementById('passwordOutput').value = password;
+            calculateStrength(password);
+        }
+
+        function calculateStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength += 20;
+            if (password.length >= 12) strength += 20;
+            if (password.length >= 16) strength += 10;
+            if (/[a-z]/.test(password)) strength += 15;
+            if (/[A-Z]/.test(password)) strength += 15;
+            if (/[0-9]/.test(password)) strength += 10;
+            if (/[^a-zA-Z0-9]/.test(password)) strength += 10;
+
+            strength = Math.min(strength, 100);
+
+            const bar = document.getElementById('strengthBar');
+            const text = document.getElementById('strengthText');
+
+            bar.style.width = strength + '%';
+
+            if (strength < 40) {
+                bar.style.background = '#ef4444';
+                text.textContent = 'Weak';
+                text.style.color = '#ef4444';
+            } else if (strength < 70) {
+                bar.style.background = '#eab308';
+                text.textContent = 'Medium';
+                text.style.color = '#eab308';
+            } else {
+                bar.style.background = '#10b981';
+                text.textContent = 'Strong';
+                text.style.color = '#10b981';
+            }
+        }
+
+        function togglePassword() {
+            passwordVisible = !passwordVisible;
+            const input = document.getElementById('passwordOutput');
+            input.type = passwordVisible ? 'text' : 'password';
+        }
+
+        function updatePasswordLength() {
+            const value = document.getElementById('passwordLength').value;
+            document.getElementById('passwordLengthValue').textContent = value;
+            generatePassword();
+        }
+
+        function generateUsername() {
+            const length = document.getElementById('usernameLength').value;
+            let username = '';
+
+            if (usernameStyle === 'mixed') {
+                const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+                const noun = nouns[Math.floor(Math.random() * nouns.length)];
+                const num = Math.floor(Math.random() * 1000);
+                username = adj + noun + num;
+            } else if (usernameStyle === 'random') {
+                const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+                for (let i = 0; i < length; i++) {
+                    username += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+            } else if (usernameStyle === 'professional') {
+                const first = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const last = lastNames[Math.floor(Math.random() * lastNames.length)];
+                username = first + '.' + last + Math.floor(Math.random() * 100);
+            }
+
+            document.getElementById('usernameOutput').value = username;
+        }
+
+        function setUsernameStyle(style) {
+            usernameStyle = style;
+            document.querySelectorAll('#username .style-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (style === 'random') {
+                document.getElementById('usernameLengthGroup').style.display = 'block';
+            } else {
+                document.getElementById('usernameLengthGroup').style.display = 'none';
+            }
+            
+            generateUsername();
+        }
+
+        function updateUsernameLength() {
+            const value = document.getElementById('usernameLength').value;
+            document.getElementById('usernameLengthValue').textContent = value;
+            generateUsername();
+        }
+
+        function generateEmail() {
+            const domain = document.getElementById('emailDomain').value;
+            let prefix = '';
+
+            if (emailStyle === 'random') {
+                const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+                for (let i = 0; i < 10; i++) {
+                    prefix += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+            } else if (emailStyle === 'alias') {
+                const timestamp = Date.now().toString(36);
+                prefix = 'alias_' + timestamp;
+            } else if (emailStyle === 'secure') {
+                const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+                for (let i = 0; i < 16; i++) {
+                    prefix += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+            }
+
+            document.getElementById('emailOutput').value = prefix + '@' + domain;
+        }
+
+        function setEmailStyle(style) {
+            emailStyle = style;
+            document.querySelectorAll('#email .style-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            generateEmail();
+        }
+
+        function generatePassphrase() {
+            const count = document.getElementById('wordCount').value;
+            const words = [];
+            
+            for (let i = 0; i < count; i++) {
+                words.push(wordList[Math.floor(Math.random() * wordList.length)]);
+            }
+
+            document.getElementById('passphraseOutput').value = words.join(separator);
+        }
+
+        function updateWordCount() {
+            const value = document.getElementById('wordCount').value;
+            document.getElementById('wordCountValue').textContent = value;
+            generatePassphrase();
+        }
+
+        function setSeparator(sep) {
+            separator = sep;
+            document.querySelectorAll('#passphrase .style-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            generatePassphrase();
+        }
+
+        function copyToClipboard(elementId) {
+            const input = document.getElementById(elementId);
+            input.select();
+            document.execCommand('copy');
+            
+            const notification = document.getElementById('notification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+    </script>
 </body>
-
 </html>
